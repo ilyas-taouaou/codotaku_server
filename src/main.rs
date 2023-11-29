@@ -1,3 +1,5 @@
+// currently the server doesn't handle disconnections properly, so if someone disconnects, the server breaks
+// this may be fixed in a future live stream
 use anyhow::Result;
 use colored::*;
 use dashmap::DashMap;
