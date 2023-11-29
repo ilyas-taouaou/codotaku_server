@@ -8,13 +8,40 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader, BufWriter};
 use tokio::net::TcpListener;
 use tokio::select;
 
+// client name length range (arbitrary)
 const CLIENT_NAME_RANGE: Range<usize> = 3..16;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
-    let server_socket_addr = "192.168.1.200:30000";
+    // DISCLAIMER: this is made a beginner so don't expect it to be the most secure or reliable
+    // I make no security or reliability guarantees for any of the following code or instructions
+
+    // to make it work across the internet
+    // replace localhost with your LOCAL ip
+    // you can find your LOCAL ip with `ipconfig` on windows and `ip addr` on linux
+    // note that you local ip is probably dynamic by default, and would change when you reconnect
+    // depending on your router, you may be able to make it static by reserving the local ip
+    // for your machine's MAC address
+    // setup your router port forwarding to your LOCAL ip with the port 30000 for TCP
+    // note that the port doesn't have to be 30000,
+    // but make sure it's not reserved or used by choosing some port in the range 1025..65000
+    // the people outside of your network can connect with a text based TCP client like telnet
+    // you gotta provide them with the port (in this case 30000) and your own PUBLIC ip
+    // you can find your PUBLIC ip here: https://www.whatismyip.com/
+    // here is the command that they may run to connect
+    // telnet YOUR_PUBLIC_IP_HERE YOUR_PORT_HERE
+    // note, make sure to close the port after you're done with it, just to make sure
+    // also note, that your public ip is also dynamic, it may change at anytime
+    // to make it static, you have to buy it if your network provider provide that (rare and expensive)
+    // otherwise the best option is to buy a domain from a domain provider (like from namecheap)
+    // and setup it up from the dashboard to point at your public ip with dynamic dns
+    // you may also want to install their software that
+    // would keep updating the domain provider with your public ip automatically in the background
+    // and finally your server is public up and running and anyone can connect to it
+    // telnet your.domain.com
+    let server_socket_addr = "localhost:30000";
     let listener = TcpListener::bind(server_socket_addr).await?;
     let (message_sender, receiver) = tokio::sync::broadcast::channel::<(String, SocketAddr)>(32);
     drop(receiver);
